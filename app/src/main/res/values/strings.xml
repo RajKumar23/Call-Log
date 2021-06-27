@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Task</string>
+    <string name="proceed">Proceed</string>
+    <string name="close">Close</string>
+</resources>
