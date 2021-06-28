@@ -7,7 +7,9 @@ import javax.inject.Inject
 class MainActivityRepository @Inject constructor(
     private val dbHelper: DatabaseHelper
 ) {
-    suspend fun getAllCallLog() = dbHelper.getAllCallLog()
+    fun getAllCallLog() = dbHelper.getAllCallLog()
+
+    suspend fun getLastCallLog() = dbHelper.getLastCallLog()
 
     suspend fun insertCallLog(callLogObject: CallLogObject) =
         dbHelper.insertCallLog(callLogObject)

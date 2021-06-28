@@ -73,4 +73,6 @@ dependencies {
 
     //Material Progress Bar
     implementation 'me.zhanghai.android.materialprogressbar:library:1.6.1'
+
+    implementation "com.squareup.retrofit2:converter-gson:2.9.0"
 }

@@ -13,6 +13,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -31,23 +32,25 @@ class MainActivityViewModel @Inject constructor(
         callLogMutableState.value = Resource.loading(ArrayList())
         viewModelScope.launch {
             try {
-                if (repository.getAllCallLog().isEmpty()) {
+                val dbValue = repository.getLastCallLog()
+                if (dbValue == null) {
                     fetchCallLogsFromDevice(context, null).join()
-                    callLogMutableState.value =
-                        Resource.success(ArrayList(repository.getAllCallLog()))
                 } else {
                     fetchCallLogsFromDevice(
                         context,
-                        CallLog.Calls._ID + ">" + repository.getAllCallLog()[0].id
+                        CallLog.Calls._ID + ">" + dbValue.id
                     ).join()
-                    callLogMutableState.value =
-                        Resource.success(ArrayList(repository.getAllCallLog()))
                 }
 
             } catch (exception: Exception) {
                 exception.printStackTrace()
                 callLogMutableState.value =
                     Resource.error("Something Went Wrong. Please try again later", data = null)
+            }
+
+            repository.getAllCallLog().collect { callLogList ->
+                callLogMutableState.value =
+                    Resource.success(ArrayList(callLogList))
             }
         }
     }
